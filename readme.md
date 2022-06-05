@@ -1,109 +1,70 @@
-## imon app
-Node.js Deployment
+# Getting Started with Create React App
 
-    Steps to deploy a Node.js app to DigitalOcean using PM2, NGINX as a reverse proxy and an SSL from LetsEncrypt
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-1. Sign up for Digital Ocean
+## Available Scripts
 
-2. Create a droplet and log in via ssh
+In the project directory, you can run:
 
-I will be using the root user, but would suggest creating a new user
-3. Install Node/NPM
+### `npm start`
 
-curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-sudo apt install nodejs
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-node --version
+### `npm test`
 
-4. Clone your project from Github
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-There are a few ways to get your files on to the server, I would suggest using Git
+### `npm run build`
 
-git clone yourproject.git
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-5. Install dependencies and test app
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-cd yourproject
-npm install
-npm start (or whatever your start command)
-# stop app
-ctrl+C
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-6. Setup PM2 process manager to keep your app running
+### `npm run eject`
 
-sudo npm i pm2 -g
-pm2 start app (or whatever your file name)
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-# Other pm2 commands
-pm2 show app
-pm2 status
-pm2 restart app
-pm2 stop app
-pm2 logs (Show log stream)
-pm2 flush (Clear logs)
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-# To make sure app starts when reboot
-pm2 startup ubuntu
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You should now be able to access your app using your IP and port. Now we want to setup a firewall blocking that port and setup NGINX as a reverse proxy so we can access it directly using port 80 (http)
-7. Setup ufw firewall
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-sudo ufw enable
-sudo ufw status
-sudo ufw allow ssh (Port 22)
-sudo ufw allow http (Port 80)
-sudo ufw allow https (Port 443)
+## Learn More
 
-8. Install NGINX and configure
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-sudo apt install nginx
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-sudo nano /etc/nginx/sites-available/default
+### Code Splitting
 
-Add the following to the location part of the server block
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-    server_name yourdomain.com www.yourdomain.com;
+### Analyzing the Bundle Size
 
-    location / {
-        proxy_pass http://localhost:5000; #whatever port your app runs on
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-# Check NGINX config
-sudo nginx -t
+### Making a Progressive Web App
 
-# Restart NGINX
-sudo service nginx restart
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-You should now be able to visit your IP with no port (port 80) and see your app. Now let's add a domain
-9. Add domain in Digital Ocean
+### Advanced Configuration
 
-In Digital Ocean, go to networking and add a domain
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-Add an A record for @ and for www to your droplet
-Register and/or setup domain from registrar
+### Deployment
 
-Choose "Custom nameservers" and add these 3
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-    ns1.digitalocean.com
-    ns2.digitalocean.com
-    ns3.digitalocean.com
+### `npm run build` fails to minify
 
-It may take a bit to propogate
-
-    Add SSL with LetsEncrypt
-
-sudo add-apt-repository ppa:certbot/certbot
-sudo apt-get update
-sudo apt-get install python-certbot-nginx
-sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
-
-# Only valid for 90 days, test the renewal process with
-certbot renew --dry-run
-
-Now visit https://yourdomain.com and you should see your Node app
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
